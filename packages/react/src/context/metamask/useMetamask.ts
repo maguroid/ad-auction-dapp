@@ -25,13 +25,6 @@ export const useMetamask = () => {
     chainId,
   };
 
-  // const getMetamaskState = (): MetamaskState => {
-  //   const jsonString = localStorage.getItem("metamaskState");
-  //   const state = jsonString ? JSON.parse(jsonString) : metamaskState;
-
-  //   return state;
-  // };
-
   const connectRequest = async () => {
     setIsConnecting(true);
     await provider.send("eth_requestAccounts", []);
@@ -90,7 +83,6 @@ export const useMetamask = () => {
   return {
     metamaskState,
     web3,
-    // getMetamaskState,
     connectRequest,
     setup,
     onUnmount,
