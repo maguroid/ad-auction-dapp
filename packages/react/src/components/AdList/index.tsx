@@ -37,7 +37,6 @@ function AdList() {
       try {
         const ads = await adsContract.getAds();
         setAds(ads);
-        console.log("fetched", ads);
       } catch (err) {
         console.error("failed to fetch ads", err);
       }
@@ -54,10 +53,10 @@ function AdList() {
         <Item key={ad.id.toString()}>
           <section>
             <Card>
-              <a href={ad.siteUrl} data-tooltip="visit this site">
+              <Cover href={ad.siteUrl} data-tooltip="visit this site">
                 <h3>{ad.title ? ad.title : "No Sponsor here !"}</h3>
-                <img src={getHttpUrl(ad)} alt={ad.title} />
-              </a>
+                <Image src={getHttpUrl(ad)} alt={ad.title} />
+              </Cover>
               <p>
                 {ad.description
                   ? ad.description
@@ -81,8 +80,18 @@ const Flex = styled.div`
   }
 `;
 
+const Image = styled.img`
+  height: 300px;
+  transition: 0.5s ease;
+  object-fit: contain;
+  margin-bottom: 30px;
+`;
+
 const Item = styled.div`
   width: 30%;
+  &:hover ${Image} {
+    opacity: 0.3;
+  }
 
   @media screen and (max-width: 768px) {
     width: 80%;
@@ -93,6 +102,13 @@ const Card = styled.article`
   margin-top: 0;
   word-break: break-all;
   text-overflow: ellipsis;
+`;
+
+const Cover = styled.a`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
 `;
 
 export default AdList;

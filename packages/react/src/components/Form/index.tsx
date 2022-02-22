@@ -4,6 +4,8 @@ import { Ads } from "types";
 import { ethers, BigNumber } from "ethers";
 import { useCallback } from "react";
 
+import styled from "styled-components";
+
 export function Form({ ad }: { ad: Ads.AdStruct }) {
   const { toggleDialog } = useDialog();
   const { image, imageSrc, request, setImage, setRequest, onSubmit } = useForm(
@@ -62,8 +64,8 @@ export function Form({ ad }: { ad: Ads.AdStruct }) {
         <p>{image?.name}</p>
       </section>
       <section>
-        <b>Preview</b>
-        <img src={imageSrc} alt={name} />
+        <h6>Preview</h6>
+        <Image src={imageSrc} alt={name} />
       </section>
       <label htmlFor="title">
         <b>Title</b>
@@ -120,3 +122,8 @@ export function Form({ ad }: { ad: Ads.AdStruct }) {
     </form>
   );
 }
+
+const Image = styled.img`
+  display: block;
+  margin: 0 auto;
+`;
