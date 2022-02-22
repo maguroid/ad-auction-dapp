@@ -25,12 +25,12 @@ export const useMetamask = () => {
     chainId,
   };
 
-  const getMetamaskState = (): MetamaskState => {
-    const jsonString = localStorage.getItem("metamaskState");
-    const state = jsonString ? JSON.parse(jsonString) : metamaskState;
+  // const getMetamaskState = (): MetamaskState => {
+  //   const jsonString = localStorage.getItem("metamaskState");
+  //   const state = jsonString ? JSON.parse(jsonString) : metamaskState;
 
-    return state;
-  };
+  //   return state;
+  // };
 
   const connectRequest = async () => {
     setIsConnecting(true);
@@ -90,7 +90,7 @@ export const useMetamask = () => {
   return {
     metamaskState,
     web3,
-    getMetamaskState,
+    // getMetamaskState,
     connectRequest,
     setup,
     onUnmount,

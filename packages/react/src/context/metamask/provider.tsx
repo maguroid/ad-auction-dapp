@@ -17,10 +17,9 @@ export const MetamaskCtxProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { getMetamaskState, connectRequest, setup, onUnmount } = useMetamask();
+  const { metamaskState, connectRequest, setup, onUnmount } = useMetamask();
 
-  const fetchState = useAsync(setup);
-  const metamaskState = getMetamaskState();
+  const fetchState = useAsync(setup, [metamaskState.currentAccount]);
 
   useEffect(() => {
     return onUnmount;
