@@ -12,7 +12,7 @@ interface ClientRequest {
   ether: string;
 }
 
-export const useForm = (id: BigNumberish) => {
+export const useForm = (id: BigNumberish, callBack: () => void) => {
   const [image, setImage] = useState<File>();
   const [imageSrc, setImageSrc] = useState("");
   const [request, setRequest] = useState<ClientRequest>({
@@ -47,6 +47,7 @@ export const useForm = (id: BigNumberish) => {
       console.error("Buying failed: ", err);
       return;
     }
+    callBack();
 
     // unpin old ad image
     if (removable.imageCID !== "") {

@@ -1,4 +1,3 @@
-import { useDialog } from "hooks/useDialog";
 import { useForm } from "hooks/useForm";
 import { Ads } from "types";
 import { ethers, BigNumber } from "ethers";
@@ -6,10 +5,16 @@ import { useCallback } from "react";
 
 import styled from "styled-components";
 
-export function Form({ ad }: { ad: Ads.AdStruct }) {
-  const { toggleDialog } = useDialog();
+export function Form({
+  ad,
+  callBack,
+}: {
+  ad: Ads.AdStruct;
+  callBack: () => void;
+}) {
   const { image, imageSrc, request, setImage, setRequest, onSubmit } = useForm(
-    ad.id
+    ad.id,
+    callBack
   );
   const name = image?.name;
   const minPrice = useCallback(() => {
@@ -44,18 +49,21 @@ export function Form({ ad }: { ad: Ads.AdStruct }) {
             }
           />
         </label>
-        <label htmlFor="image">
-          <b>Select your AD's image</b>
-          <input
-            className="hidden"
-            type="file"
-            onChange={(e) => setImage(e.currentTarget.files?.[0])}
-            id="image"
-            name="image"
-            accept="image/*"
-            required
-          />
-        </label>
+        <section />
+        <section>
+          <label htmlFor="image">
+            <b>Select your AD's image</b>
+            <input
+              className="hidden"
+              type="file"
+              onChange={(e) => setImage(e.currentTarget.files?.[0])}
+              id="image"
+              name="image"
+              accept="image/*"
+              required
+            />
+          </label>
+        </section>
       </section>
       <section>
         <p>
@@ -64,58 +72,64 @@ export function Form({ ad }: { ad: Ads.AdStruct }) {
         <p>{image?.name}</p>
       </section>
       <section>
-        <h6>Preview</h6>
+        <b>Preview</b>
         <Image src={imageSrc} alt={name} />
       </section>
-      <label htmlFor="title">
-        <b>Title</b>
+      <section>
+        <label htmlFor="title">
+          <b>Title</b>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={request.title}
+            placeholder="ex. New Products are released !"
+            maxLength={40}
+            required
+            onChange={(e) =>
+              setRequest((request) => ({ ...request, title: e.target.value }))
+            }
+          />
+        </label>
+      </section>
+      <section>
+        <label htmlFor="site-url">
+          <b>Your Site URL</b>
+        </label>
         <input
           type="text"
-          id="title"
-          name="title"
-          value={request.title}
-          placeholder="ex. New Products are released !"
-          maxLength={40}
+          id="site-url"
+          name="site-url"
+          value={request.siteUrl}
+          placeholder="ex. https://github.com/maguroid"
           required
           onChange={(e) =>
-            setRequest((request) => ({ ...request, title: e.target.value }))
+            setRequest((request) => ({ ...request, siteUrl: e.target.value }))
           }
         />
-      </label>
-      <label htmlFor="site-url">
-        <b>Your Site URL</b>
-      </label>
-      <input
-        type="text"
-        id="site-url"
-        name="site-url"
-        value={request.siteUrl}
-        placeholder="ex. https://github.com/maguroid"
-        required
-        onChange={(e) =>
-          setRequest((request) => ({ ...request, siteUrl: e.target.value }))
-        }
-      />
-      <label htmlFor="description">
-        <b>AD's description</b>
-        <textarea
-          id="description"
-          name="description"
-          value={request.description}
-          placeholder="ex. Awesome Project has been launched! Check it out!"
-          maxLength={300}
-          required
-          onChange={(e) =>
-            setRequest((request) => ({
-              ...request,
-              description: e.target.value,
-            }))
-          }
-        />
-      </label>
+      </section>
+      <section>
+        <label htmlFor="description">
+          <b>AD's description</b>
+          <textarea
+            id="description"
+            name="description"
+            value={request.description}
+            placeholder="ex. Awesome Project has been launched! Check it out!"
+            maxLength={300}
+            required
+            onChange={(e) =>
+              setRequest((request) => ({
+                ...request,
+                description: e.target.value,
+              }))
+            }
+          />
+        </label>
+      </section>
       <footer>
         <input type="submit" value="Confirm" />
-        <button type="button" className="secondary" onClick={toggleDialog}>
+        <button type="button" className="secondary" onClick={callBack}>
           Cancel
         </button>
       </footer>

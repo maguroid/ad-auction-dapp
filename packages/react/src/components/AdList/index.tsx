@@ -47,7 +47,7 @@ function AdList() {
   return (
     <Flex className="container-fluid">
       <Dialog>
-        <Form ad={currentAd} />
+        <Form ad={currentAd} callBack={toggleDialog} />
       </Dialog>
       {ads.map((ad) => (
         <Item key={ad.id.toString()}>

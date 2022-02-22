@@ -13,6 +13,7 @@
     "console": "yarn workspace @auction-dapp/truffle console",
     "debug": "yarn workspace @auction-dapp/truffle debug",
     "develop": "yarn workspace @auction-dapp/truffle develop",
+    "gh-deploy": "yarn workspace @auction-dapp/react deploy",
     "migrate": "yarn workspace @auction-dapp/truffle migrate",
     "postmigrate": "yarn gen-types",
     "ctr-test": "yarn workspace @auction-dapp/truffle test",
