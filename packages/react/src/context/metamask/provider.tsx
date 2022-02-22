@@ -2,6 +2,8 @@ import { createContext, useEffect } from "react";
 import { useAsync } from "react-use";
 import { useMetamask, MetamaskState } from "context/metamask";
 
+import styled from "styled-components";
+
 const initialState: MetamaskState = {
   provider: window.ethereum,
   currentAccount: "",
@@ -34,13 +36,27 @@ export const MetamaskCtxProvider = ({
           <article>Error: {fetchState.error.message}</article>
         </dialog>
       ) : (
-        <button
-          area-busy={`${metamaskState.isConnecting}`}
-          onClick={connectRequest}
-        >
-          Connect Your Wallet
-        </button>
+        <Center>
+          <Button
+            area-busy={`${metamaskState.isConnecting}`}
+            onClick={connectRequest}
+          >
+            Connect Your Wallet
+          </Button>
+        </Center>
       )}
     </MetamaskContext.Provider>
   );
 };
+
+const Center = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+`;
+
+const Button = styled.button`
+  display: inline-block;
+  width: auto;
+`;
