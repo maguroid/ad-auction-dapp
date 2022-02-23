@@ -1,46 +1,38 @@
-# Getting Started with Create React App
+# Ad Auction Dapp.etr
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+simple ad buying and showing platform with react + solidity
 
-## Available Scripts
+## Requirement
 
-In the project directory, you can run:
+- Metamask: You need to install Metamask extension or Metamask mobile App
 
-### `yarn start`
+## Getting started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Visiting site
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+This App is deployed to github pages
+Please visit the site below.
 
-### `yarn test`
+https://maguroid.github.io/ad-auction-dapp/
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+> :warning: It is set up for Ropsten Test Network.
+> By default, it automatically send request to change network.
+> But in case no request is send, you need to change network manually.
 
-### `yarn build`
+If you still have no ether on Ropsten, [get ether from faucet](https://faucet.dimensions.network/)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Interact with Locally
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+You can also interact with local blockchain network.
+It takes few minutes. Check following steps.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### 1. launch your local node
 
-### `yarn eject`
+Hit `yarn chain` on project root directory.
+This command launch local blockchain server with [ganache](https://trufflesuite.com/ganache/index.html).
+You can also use GUI version to launch a node.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+#### 2. Deploy your smart-contract to the local node.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+`yarn migrate` on project root.
+This command compile contract files (`/packages/truffle/contracts/*.sol`) and deploy contract to Your local network.
