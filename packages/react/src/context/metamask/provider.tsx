@@ -4,7 +4,13 @@ import { useMetamask, MetamaskState } from "context/metamask";
 
 import styled from "styled-components";
 
-export const MetamaskContext = createContext<MetamaskState | null>(null);
+export const MetamaskContext = createContext<MetamaskState>({
+  provider: window.ethereum,
+  currentAccount: "",
+  isConnecting: false,
+  isConnected: false,
+  chainId: "-1",
+});
 
 export const MetamaskCtxProvider = ({
   children,

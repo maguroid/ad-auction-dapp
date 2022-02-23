@@ -15,7 +15,7 @@ export const useMetamask = () => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [web3] = useState(new ethers.providers.Web3Provider(provider));
-  const [chainId, setChainId] = useState("1337");
+  const [chainId, setChainId] = useState("3"); // ropsten network
 
   const metamaskState: MetamaskState = {
     provider,
@@ -32,11 +32,14 @@ export const useMetamask = () => {
   };
 
   const setup = async () => {
+    await provider.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: "0x" + Number(chainId).toString(16) }],
+    });
     provider.on("accountsChanged", onAccountsChanged);
     provider.on("chainChanged", onChainChanged);
 
     const accounts = await web3.listAccounts();
-    const { chainId } = await web3.getNetwork();
 
     if (accounts.length === 0) {
       console.info("Please Connect to Metamask");
@@ -71,7 +74,7 @@ export const useMetamask = () => {
   const onChainChanged = (chainId: BigNumberish) => {
     const decimalId = BigNumber.from(chainId).toString();
     console.info("chain changed", decimalId);
-    setChainId(decimalId);
+    setChainId(() => decimalId);
   };
 
   const onUnmount = () => {

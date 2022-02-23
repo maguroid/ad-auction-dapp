@@ -1,7 +1,8 @@
 import { useDialog } from "hooks/useDialog";
 import { Form } from "components/Form";
 import { useAdsContract } from "hooks/useAdsContract";
-import { useState, useEffect, useCallback } from "react";
+import { MetamaskContext } from "context/metamask";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { Ads } from "types/Ads";
 import noImage from "assets/images/no-image.png";
 import { httpsUrl } from "utils/ipfs";
@@ -21,6 +22,7 @@ function AdList() {
     owner: "",
     price: -1,
   });
+  const metamaskState = useContext(MetamaskContext);
   const getHttpUrl = useCallback((ad: Ads.AdStruct) => {
     if (ad.imageCID === "") return noImage;
 
@@ -39,10 +41,11 @@ function AdList() {
         setAds(ads);
       } catch (err) {
         console.error("failed to fetch ads", err);
+        setAds([]);
       }
     }
     fetch();
-  }, [adsContract]);
+  }, [adsContract, metamaskState]);
 
   return (
     <Flex className="container-fluid">
