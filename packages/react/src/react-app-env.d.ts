@@ -1,5 +1,7 @@
 /// <reference types="react-scripts" />
+
 declare namespace NodeJS {
+  import { AvailableChainId, AvailableNetworkId } from "types/blockchain";
   interface ProcessEnv {
     REACT_APP_CONTRACT_ADDRESS: string;
     REACT_APP_IPFS_HOST: string;
@@ -8,6 +10,8 @@ declare namespace NodeJS {
     REACT_APP_PINNING_SERVICE: string;
     REACT_APP_PINNING_PROJECT: string;
     REACT_APP_PINNING_SECRET: string;
+    REACT_APP_DEFAULT_CHAIN_ID: AvailableChainId;
+    REACT_APP_DEFAULT_NETWORK_ID: AvailableNetworkId;
   }
 }
 

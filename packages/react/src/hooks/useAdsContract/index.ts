@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ethers, BigNumberish } from "ethers";
 import { Ads__factory } from "types/factories/Ads__factory";
 import { Ads } from "types/Ads";
-import { useMetamask } from "context/metamask";
+import { MetamaskContext } from "context/metamask";
 import { networks } from "@auction-dapp/truffle/build/contracts/Ads.json";
 
 export type AdBuyingRequest = {
@@ -13,26 +13,13 @@ export type AdBuyingRequest = {
   siteUrl: string;
   ether: string;
 };
-
-/* TODO: change network dynamically
-const NETWORKS = {
-  mainnet: "1",
-  ropsten: "3",
-  rinkeby: "4",
-  goerli: "5",
-  kotti: "6",
-  morder: "7",
-  ganache: "5777",
-} as const;
-
-type Network = typeof NETWORKS[keyof typeof NETWORKS];
-*/
-
 export const useAdsContract = () => {
-  const { web3, metamaskState } = useMetamask();
-  const signer = web3.getSigner();
-  const [adsContract] = useState<Ads>(
-    Ads__factory.connect(networks["3"].address, signer)
+  const metamaskState = useContext(MetamaskContext);
+  const [adsContract, setAdsContract] = useState<Ads>(
+    Ads__factory.connect(
+      networks[metamaskState.networkId].address,
+      metamaskState.signer
+    )
   );
 
   const getAds = async () => {
@@ -61,6 +48,15 @@ export const useAdsContract = () => {
       throw err;
     }
   };
+
+  useEffect(() => {
+    setAdsContract(
+      Ads__factory.connect(
+        networks[metamaskState.networkId].address,
+        metamaskState.signer
+      )
+    );
+  }, [metamaskState.networkId, metamaskState.signer]);
 
   return {
     adsContract,

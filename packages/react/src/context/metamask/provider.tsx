@@ -1,15 +1,19 @@
 import { createContext, useEffect } from "react";
 import { useAsync } from "react-use";
-import { useMetamask, MetamaskState } from "context/metamask";
+import { useMetamask } from "context/metamask";
+import { MetamaskState } from "types/metamask";
+import { VoidSigner } from "ethers";
 
 import styled from "styled-components";
 
 export const MetamaskContext = createContext<MetamaskState>({
   provider: window.ethereum,
+  signer: new VoidSigner(""),
   currentAccount: "",
   isConnecting: false,
   isConnected: false,
-  chainId: "-1",
+  chainId: "3",
+  networkId: "3",
 });
 
 export const MetamaskCtxProvider = ({
