@@ -95,12 +95,10 @@ export const useMetamask = () => {
       console.info("chain changed", decimal_chain);
       setChainId(() => decimal_chain);
 
-      if (decimal_chain === AVAILABLE_CHAIN_IDS.localhost) {
-        // in localhost, chainID and networkID are different
-        setNetworkId(AVAILABLE_NETWORK_IDS.localhost);
-      } else {
-        setNetworkId(decimal_chain);
-      }
+      // in localhost, chainID and networkID are different
+      provider
+        .send("net_version", [])
+        .then((res: any) => setNetworkId(res.result));
     } else {
       console.error("This network is not available in this app");
     }
