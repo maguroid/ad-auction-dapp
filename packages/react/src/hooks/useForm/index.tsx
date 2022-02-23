@@ -27,7 +27,6 @@ export const useForm = (id: BigNumberish, callBack: () => void) => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("onSubmit");
 
     if (image === undefined) {
       console.error("Error: image was not selected");

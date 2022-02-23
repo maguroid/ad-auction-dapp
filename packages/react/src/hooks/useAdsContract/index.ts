@@ -14,11 +14,25 @@ export type AdBuyingRequest = {
   ether: string;
 };
 
+/* TODO: change network dynamically
+const NETWORKS = {
+  mainnet: "1",
+  ropsten: "3",
+  rinkeby: "4",
+  goerli: "5",
+  kotti: "6",
+  morder: "7",
+  ganache: "5777",
+} as const;
+
+type Network = typeof NETWORKS[keyof typeof NETWORKS];
+*/
+
 export const useAdsContract = () => {
   const { web3, metamaskState } = useMetamask();
   const signer = web3.getSigner();
   const [adsContract] = useState<Ads>(
-    Ads__factory.connect(networks[5777].address, signer)
+    Ads__factory.connect(networks["3"].address, signer)
   );
 
   const getAds = async () => {

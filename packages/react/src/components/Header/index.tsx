@@ -2,29 +2,22 @@ function Header() {
   return (
     <header className="container-fluid">
       <hgroup>
-        <h1>Personal Ad</h1>
+        <h1>Ad Auction.eth</h1>
         <h2>React with ethers.js</h2>
       </hgroup>
-      {/* <nav>
-        <ul>
-          <li>Theme:</li>
-          <li>
-            <a href="#" data-theme-swithcher="auto">
-              Auto
-            </a>
-          </li>
-          <li>
-            <a href="#" data-theme-swithcher="light">
-              Light
-            </a>
-          </li>
-          <li>
-            <a href="#" data-theme-swithcher="dark">
-              Dark
-            </a>
-          </li>
-        </ul>
-      </nav> */}
+      <p>You can overwrite these ads. Try it !</p>
+      <p>
+        <mark>
+          Please make sure that your metamask wallet is{" "}
+          <a
+            href="https://medium.com/compound-finance/the-beginners-guide-to-using-an-ethereum-test-network-95bbbc85fc1d"
+            target="_blank"
+            rel="noreferrer"
+          >
+            connected Ropsten Network.
+          </a>
+        </mark>
+      </p>
     </header>
   );
 }

@@ -4,6 +4,7 @@ import { ethers, BigNumber } from "ethers";
 import { useCallback } from "react";
 
 import styled from "styled-components";
+import { parseUnits } from "ethers/lib/utils";
 
 export function Form({
   ad,
@@ -18,16 +19,13 @@ export function Form({
   );
   const name = image?.name;
   const minPrice = useCallback(() => {
-    return BigNumber.from(ad.price).add(1);
+    return BigNumber.from(ad.price).add(parseUnits("0.0001", "ether"));
   }, [ad]);
   return (
     <form onSubmit={onSubmit}>
       <section>
-        <h3>Confirm your Buying</h3>
-        <p>
-          this is sample text this is sample text this is sample text this is
-          sample text this is sample text this is sample text
-        </p>
+        <h3>Proceed with the transaction</h3>
+        <p>It should take few minutes to reflect your buying. Please wait...</p>
       </section>
 
       <section>
@@ -84,7 +82,7 @@ export function Form({
             name="title"
             value={request.title}
             placeholder="ex. New Products are released !"
-            maxLength={40}
+            maxLength={60}
             required
             onChange={(e) =>
               setRequest((request) => ({ ...request, title: e.target.value }))

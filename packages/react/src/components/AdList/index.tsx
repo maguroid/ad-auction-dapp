@@ -53,7 +53,12 @@ function AdList() {
         <Item key={ad.id.toString()}>
           <section>
             <Card>
-              <Cover href={ad.siteUrl} data-tooltip="visit this site">
+              <Cover
+                href={ad.siteUrl}
+                target="_blank"
+                rel="noreferrer"
+                data-tooltip="visit this site"
+              >
                 <h3>{ad.title ? ad.title : "No Sponsor here !"}</h3>
                 <Image src={getHttpUrl(ad)} alt={ad.title} />
               </Cover>

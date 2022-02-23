@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "license": "MIT",
   "dependencies": {
+    "@truffle/hdwallet-provider": "^2.0.3",
     "cids": "^1.1.9",
+    "dotenv": "^16.0.0",
     "ganache": "^7.0.2",
     "multihashes": "^4.0.3",
     "truffle": "^5.5.0",

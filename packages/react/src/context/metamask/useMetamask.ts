@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { ethers } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 
 export type MetamaskState = {
   provider: any;
   currentAccount: string;
   isConnecting: boolean;
   isConnected: boolean;
-  chainId: number;
+  chainId: string;
 };
 
 export const useMetamask = () => {
@@ -14,8 +14,8 @@ export const useMetamask = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [chainId, setChainId] = useState(-1);
   const [web3] = useState(new ethers.providers.Web3Provider(provider));
+  const [chainId, setChainId] = useState("1337");
 
   const metamaskState: MetamaskState = {
     provider,
@@ -45,7 +45,7 @@ export const useMetamask = () => {
       setProvider(provider);
       setIsConnected(true);
       setCurrentAccount(accounts[0]);
-      setChainId(chainId);
+      setChainId(chainId.toString());
       localStorage.setItem("metamaskState", JSON.stringify(metamaskState));
     }
 
@@ -68,9 +68,10 @@ export const useMetamask = () => {
     console.info("accounts changed", accounts[0]);
   };
 
-  const onChainChanged = (chainId: number) => {
-    console.info("chain changed", chainId);
-    setChainId(chainId);
+  const onChainChanged = (chainId: BigNumberish) => {
+    const decimalId = BigNumber.from(chainId).toString();
+    console.info("chain changed", decimalId);
+    setChainId(decimalId);
   };
 
   const onUnmount = () => {
