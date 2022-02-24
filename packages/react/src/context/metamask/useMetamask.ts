@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BigNumberish, ethers } from "ethers";
+import { BigNumberish, providers } from "ethers";
 import { MetamaskState } from "types/metamask";
 
 export const AVAILABLE_CHAIN_IDS = {
@@ -13,12 +13,19 @@ export const AVAILABLE_NETWORK_IDS = {
 } as const;
 
 export const useMetamask = () => {
-  const [provider, setProvider] = useState(window.ethereum);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [provider, setProvider] = useState<any>(undefined);
+  const [web3, setWeb3] = useState<providers.Web3Provider | undefined>(
+    undefined
+  );
+  const [signer, setSigner] = useState<providers.JsonRpcSigner | undefined>(
+    web3?.getSigner()
+  );
+
   const [currentAccount, setCurrentAccount] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [web3] = useState(new ethers.providers.Web3Provider(provider, "any"));
-  const [signer, setSigner] = useState(web3.getSigner());
+  // const [web3] = useState(new providers.Web3Provider(provider, "any"));
   const [chainId, setChainId] = useState(
     process.env.REACT_APP_DEFAULT_CHAIN_ID
   );
@@ -27,6 +34,7 @@ export const useMetamask = () => {
   );
 
   const metamaskState: MetamaskState = {
+    isInstalled,
     provider,
     signer,
     currentAccount,
@@ -38,30 +46,40 @@ export const useMetamask = () => {
 
   const connectRequest = async () => {
     setIsConnecting(true);
-    await provider.send("eth_requestAccounts", []);
+    await provider.request({
+      method: "eth_requestAccounts",
+      params: [],
+    });
     setIsConnecting(false);
   };
 
-  const setup = async () => {
+  const setupProvider = async () => {
+    setIsInstalled(!!window.ethereum);
+    setProvider(() => window.ethereum);
+    setWeb3(new providers.Web3Provider(provider));
+  };
+
+  const setupChain = async () => {
     // set default network
-    await provider.request({
+    setSigner(web3?.getSigner());
+
+    await provider?.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: "0x" + Number(chainId).toString(16) }],
     });
-    provider.on("accountsChanged", onAccountsChanged);
-    provider.on("chainChanged", onChainChanged);
+    provider?.on("accountsChanged", onAccountsChanged);
+    provider?.on("chainChanged", onChainChanged);
 
-    const accounts = await web3.listAccounts();
+    const accounts = (await web3?.listAccounts()) ?? [];
 
     if (accounts.length === 0) {
       console.info("Please Connect to Metamask");
-      localStorage.removeItem("metamaskState");
     } else if (currentAccount !== accounts[0]) {
       setProvider(provider);
       setIsConnected(true);
       setCurrentAccount(accounts[0]);
       setChainId(chainId);
-      localStorage.setItem("metamaskState", JSON.stringify(metamaskState));
+      setNetworkId(networkId);
     }
 
     return () => {
@@ -79,7 +97,7 @@ export const useMetamask = () => {
       setCurrentAccount("");
     } else if (currentAccount !== accounts[0]) {
       setCurrentAccount(accounts[0]);
-      setSigner(web3.getSigner(accounts[0]));
+      setSigner(web3?.getSigner(accounts[0]));
     }
     console.info("accounts changed", accounts[0]);
   };
@@ -91,16 +109,19 @@ export const useMetamask = () => {
       (v) => v === decimal_chain
     );
 
-    if (isAvailableChain) {
-      console.info("chain changed", decimal_chain);
-      setChainId(() => decimal_chain);
+    console.info("chain changed", decimal_chain);
 
-      // in localhost, chainID and networkID are different
-      provider
-        .send("net_version", [])
-        .then((res: any) => setNetworkId(res.result));
-    } else {
+    provider
+      .request({
+        method: "net_version",
+        params: [],
+      })
+      .then((network: any) => {
+        setNetworkId(network);
+      });
+    if (!isAvailableChain) {
       console.error("This network is not available in this app");
+      setChainId(undefined);
     }
   };
 
@@ -115,7 +136,8 @@ export const useMetamask = () => {
     metamaskState,
     web3,
     connectRequest,
-    setup,
+    setupProvider,
+    setupChain,
     onUnmount,
   };
 };

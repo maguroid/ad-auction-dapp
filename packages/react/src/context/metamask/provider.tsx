@@ -1,14 +1,14 @@
-import { createContext, useEffect } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { useAsync } from "react-use";
 import { useMetamask } from "context/metamask";
 import { MetamaskState } from "types/metamask";
-import { VoidSigner } from "ethers";
 
 import styled from "styled-components";
 
 export const MetamaskContext = createContext<MetamaskState>({
+  isInstalled: !!window.ethereum,
   provider: window.ethereum,
-  signer: new VoidSigner(""),
+  signer: undefined,
   currentAccount: "",
   isConnecting: false,
   isConnected: false,
@@ -16,26 +16,37 @@ export const MetamaskContext = createContext<MetamaskState>({
   networkId: "3",
 });
 
+export const useMetamaskCtx = () => {
+  return useContext(MetamaskContext);
+};
+
 export const MetamaskCtxProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const { metamaskState, connectRequest, setup, onUnmount } = useMetamask();
+  const {
+    metamaskState,
+    connectRequest,
+    setupProvider,
+    setupChain,
+    onUnmount,
+  } = useMetamask();
 
-  const fetchState = useAsync(setup, [metamaskState.currentAccount]);
+  const providerState = useAsync(setupProvider, [metamaskState.isInstalled]);
+  const chainState = useAsync(setupChain, [providerState]);
 
   useEffect(() => {
     return onUnmount;
   });
 
-  return (
+  const MetamaskInstalled = () => (
     <MetamaskContext.Provider value={metamaskState}>
       {metamaskState.isConnected ? (
         children
-      ) : fetchState.loading ? null : fetchState.error ? (
+      ) : chainState.loading ? null : chainState.error ? (
         <dialog>
-          <article>Error: {fetchState.error.message}</article>
+          <article>Error: {chainState.error.message}</article>
         </dialog>
       ) : (
         <Center>
@@ -49,6 +60,23 @@ export const MetamaskCtxProvider = ({
       )}
     </MetamaskContext.Provider>
   );
+
+  const MetamaskNotInstalled = () => (
+    <Center>
+      <ButtonLink
+        role="button"
+        href="https://metamask.app.link/dapp/maguroid.github.io/ad-auction-dapp/"
+      >
+        Please install Metamask
+      </ButtonLink>
+    </Center>
+  );
+
+  return metamaskState.isInstalled ? (
+    <MetamaskInstalled />
+  ) : (
+    <MetamaskNotInstalled />
+  );
 };
 
 const Center = styled.div`
@@ -59,6 +87,11 @@ const Center = styled.div`
 `;
 
 const Button = styled.button`
+  display: inline-block;
+  width: auto;
+`;
+
+const ButtonLink = styled.a`
   display: inline-block;
   width: auto;
 `;

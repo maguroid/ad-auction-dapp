@@ -15,24 +15,19 @@ export type AdBuyingRequest = {
 };
 export const useAdsContract = () => {
   const metamaskState = useContext(MetamaskContext);
-  const [adsContract, setAdsContract] = useState<Ads>(
-    Ads__factory.connect(
-      networks[metamaskState.networkId].address,
-      metamaskState.signer
-    )
-  );
+  const [adsContract, setAdsContract] = useState<Ads | undefined>(undefined);
 
   const getAds = async () => {
-    return await adsContract.getAds();
+    return await adsContract?.getAds();
   };
 
   const getAd = async (id: BigNumberish) => {
-    return await adsContract.getAd(id);
+    return await adsContract?.getAd(id);
   };
 
   const buy = async (request: AdBuyingRequest) => {
     try {
-      const res = await adsContract.buy(
+      const res = await adsContract?.buy(
         request.id,
         request.title,
         request.imageCID,
@@ -50,9 +45,17 @@ export const useAdsContract = () => {
   };
 
   useEffect(() => {
+    if (
+      metamaskState.networkId === undefined ||
+      metamaskState.signer === undefined
+    ) {
+      setAdsContract(undefined);
+      return;
+    }
+
     setAdsContract(
       Ads__factory.connect(
-        networks[metamaskState.networkId].address,
+        networks[metamaskState.networkId]?.address ?? "",
         metamaskState.signer
       )
     );

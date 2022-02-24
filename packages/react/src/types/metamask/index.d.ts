@@ -1,9 +1,10 @@
 import { AvailableChainId, AvailableNetworkId } from "types/blockchain";
-import { Signer } from "ethers";
+import { providers } from "ethers";
 
 export type MetamaskState = {
-  provider: any;
-  signer: Signer;
+  isInstalled: boolean;
+  provider: providers.Web3Provider | undefined;
+  signer: providers.JsonRpcSigner | undefined;
   currentAccount: string;
   isConnecting: boolean;
   isConnected: boolean;

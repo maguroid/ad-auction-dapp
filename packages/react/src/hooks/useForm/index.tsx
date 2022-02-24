@@ -49,7 +49,7 @@ export const useForm = (id: BigNumberish, callBack: () => void) => {
     callBack();
 
     // unpin old ad image
-    if (removable.imageCID !== "") {
+    if (removable?.imageCID) {
       try {
         await ipfs.pin.rm(removable.imageCID);
       } catch (err) {
