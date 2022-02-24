@@ -1,9 +1,10 @@
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ethers, BigNumberish } from "ethers";
 import { Ads__factory } from "types/factories/Ads__factory";
 import { Ads } from "types/Ads";
-import { MetamaskContext } from "context/metamask";
+import { useMetamaskCtx } from "context/metamask";
 import { networks } from "@auction-dapp/truffle/build/contracts/Ads.json";
+import { AVAILABLE_NETWORK_IDS } from "hooks/useMetamask";
 
 export type AdBuyingRequest = {
   id: BigNumberish;
@@ -14,7 +15,7 @@ export type AdBuyingRequest = {
   ether: string;
 };
 export const useAdsContract = () => {
-  const metamaskState = useContext(MetamaskContext);
+  const { currentAccount, networkId, signer } = useMetamaskCtx();
   const [adsContract, setAdsContract] = useState<Ads | undefined>(undefined);
 
   const getAds = async () => {
@@ -34,7 +35,7 @@ export const useAdsContract = () => {
         request.description,
         request.siteUrl,
         {
-          from: metamaskState.currentAccount,
+          from: currentAccount,
           value: ethers.utils.parseEther(request.ether),
         }
       );
@@ -45,21 +46,21 @@ export const useAdsContract = () => {
   };
 
   useEffect(() => {
-    if (
-      metamaskState.networkId === undefined ||
-      metamaskState.signer === undefined
-    ) {
-      setAdsContract(undefined);
-      return;
-    }
+    const getContract = () => {
+      const availableIds = Object.values(AVAILABLE_NETWORK_IDS);
+      const jsonKey = availableIds.find((id) => networkId === id);
 
-    setAdsContract(
-      Ads__factory.connect(
-        networks[metamaskState.networkId]?.address ?? "",
-        metamaskState.signer
-      )
-    );
-  }, [metamaskState.networkId, metamaskState.signer]);
+      if (signer && jsonKey) {
+        const address = networks[jsonKey].address;
+        setAdsContract(Ads__factory.connect(address, signer));
+        return;
+      }
+
+      setAdsContract(undefined);
+    };
+
+    getContract();
+  }, [networkId, signer]);
 
   return {
     adsContract,

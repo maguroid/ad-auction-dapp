@@ -25,11 +25,10 @@ export const useMetamask = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  // const [web3] = useState(new providers.Web3Provider(provider, "any"));
-  const [chainId, setChainId] = useState(
+  const [chainId, setChainId] = useState<string>(
     process.env.REACT_APP_DEFAULT_CHAIN_ID
   );
-  const [networkId, setNetworkId] = useState(
+  const [networkId, setNetworkId] = useState<string>(
     process.env.REACT_APP_DEFAULT_NETWORK_ID
   );
 
@@ -56,7 +55,7 @@ export const useMetamask = () => {
   const setupProvider = async () => {
     setIsInstalled(!!window.ethereum);
     setProvider(() => window.ethereum);
-    setWeb3(new providers.Web3Provider(provider));
+    setWeb3(new providers.Web3Provider(provider, "any"));
   };
 
   const setupChain = async () => {
@@ -105,24 +104,26 @@ export const useMetamask = () => {
   const onChainChanged = (_chainId: BigNumberish) => {
     const decimal_chain = Number(_chainId).toString();
 
-    const isAvailableChain = Object.values(AVAILABLE_CHAIN_IDS).find(
+    const isAvailableChain = Object.values(AVAILABLE_CHAIN_IDS).some(
       (v) => v === decimal_chain
     );
 
+    if (!isAvailableChain) {
+      console.error("This network is not available in this app");
+    }
+
     console.info("chain changed", decimal_chain);
+    setChainId(decimal_chain);
 
     provider
       .request({
+        // It need in case chain_id and network_id are different
         method: "net_version",
         params: [],
       })
       .then((network: any) => {
         setNetworkId(network);
       });
-    if (!isAvailableChain) {
-      console.error("This network is not available in this app");
-      setChainId(undefined);
-    }
   };
 
   const onUnmount = () => {

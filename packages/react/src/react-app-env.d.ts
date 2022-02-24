@@ -5,12 +5,6 @@ declare global {
   interface Window {
     ethereum: any;
   }
-
-  interface Navigator {
-    userAgentData: {
-      mobile: boolean;
-    };
-  }
   declare namespace NodeJS {
     interface ProcessEnv {
       REACT_APP_CONTRACT_ADDRESS: string;

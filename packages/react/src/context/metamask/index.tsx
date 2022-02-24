@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect } from "react";
 import { useAsync } from "react-use";
-import { useMetamask } from "context/metamask";
+import { useMetamask } from "hooks/useMetamask";
 import { MetamaskState } from "types/metamask";
 
 import styled from "styled-components";

@@ -33,17 +33,13 @@ function AdList() {
   };
 
   useEffect(() => {
-    async function fetch() {
-      try {
-        const ads = (await adsContract?.getAds()) ?? [];
-        setAds(ads);
-      } catch (err) {
-        console.error("failed to fetch ads", err);
+    adsContract
+      ?.getAds()
+      .then((ads) => setAds(ads))
+      .catch((err) => {
+        console.error("failed to fetch ads", adsContract.address, err);
         setAds([]);
-      }
-    }
-    fetch();
-
+      });
     return () => {
       setAds([]);
     };

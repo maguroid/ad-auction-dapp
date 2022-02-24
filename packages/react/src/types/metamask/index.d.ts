@@ -8,6 +8,6 @@ export type MetamaskState = {
   currentAccount: string;
   isConnecting: boolean;
   isConnected: boolean;
-  chainId: AvailableChainId;
-  networkId: AvailableNetworkId;
+  chainId: string;
+  networkId: string;
 };
