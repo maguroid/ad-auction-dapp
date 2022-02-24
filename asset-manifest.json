@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/ad-auction-dapp/static/css/main.05f47252.chunk.css",
-    "main.js": "/ad-auction-dapp/static/js/main.4b5d255a.chunk.js",
-    "main.js.map": "/ad-auction-dapp/static/js/main.4b5d255a.chunk.js.map",
+    "main.js": "/ad-auction-dapp/static/js/main.2e2a9d95.chunk.js",
+    "main.js.map": "/ad-auction-dapp/static/js/main.2e2a9d95.chunk.js.map",
     "runtime-main.js": "/ad-auction-dapp/static/js/runtime-main.f295f9c3.js",
     "runtime-main.js.map": "/ad-auction-dapp/static/js/runtime-main.f295f9c3.js.map",
     "static/css/2.4bea3887.chunk.css": "/ad-auction-dapp/static/css/2.4bea3887.chunk.css",
@@ -21,6 +21,6 @@
     "static/css/2.4bea3887.chunk.css",
     "static/js/2.054935c9.chunk.js",
     "static/css/main.05f47252.chunk.css",
-    "static/js/main.4b5d255a.chunk.js"
+    "static/js/main.2e2a9d95.chunk.js"
   ]
 }
