@@ -1,4 +1,3 @@
-import { AvailableChainId, AvailableNetworkId } from "types/blockchain";
 import { providers } from "ethers";
 
 export type MetamaskState = {

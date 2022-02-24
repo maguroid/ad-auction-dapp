@@ -1,5 +1,4 @@
-import { createContext, useContext, useEffect } from "react";
-import { useAsync } from "react-use";
+import { createContext, useContext } from "react";
 import { useMetamask } from "hooks/useMetamask";
 import { MetamaskState } from "types/metamask";
 
@@ -12,8 +11,8 @@ export const MetamaskContext = createContext<MetamaskState>({
   currentAccount: "",
   isConnecting: false,
   isConnected: false,
-  chainId: "3",
-  networkId: "3",
+  chainId: process.env.REACT_APP_DEFAULT_CHAIN_ID,
+  networkId: process.env.REACT_APP_DEFAULT_NETWORK_ID,
 });
 
 export const useMetamaskCtx = () => {
@@ -25,34 +24,21 @@ export const MetamaskCtxProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const {
-    metamaskState,
-    connectRequest,
-    setupProvider,
-    setupChain,
-    onUnmount,
-  } = useMetamask();
-
-  const providerState = useAsync(setupProvider, [metamaskState.isInstalled]);
-  const chainState = useAsync(setupChain, [providerState]);
-
-  useEffect(() => {
-    return onUnmount;
-  });
+  const { metamaskState, requestAccounts, chainSetupState } = useMetamask();
 
   const MetamaskInstalled = () => (
     <MetamaskContext.Provider value={metamaskState}>
       {metamaskState.isConnected ? (
         children
-      ) : chainState.loading ? null : chainState.error ? (
+      ) : chainSetupState.loading ? null : chainSetupState.error ? (
         <dialog>
-          <article>Error: {chainState.error.message}</article>
+          <article>Error: {chainSetupState.error.message}</article>
         </dialog>
       ) : (
         <Center>
           <Button
             area-busy={`${metamaskState.isConnecting}`}
-            onClick={connectRequest}
+            onClick={requestAccounts}
           >
             Connect Your Wallet
           </Button>

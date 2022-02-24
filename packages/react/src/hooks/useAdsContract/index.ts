@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ethers, BigNumberish } from "ethers";
 import { Ads__factory } from "types/factories/Ads__factory";
 import { Ads } from "types/Ads";
@@ -14,9 +14,30 @@ export type AdBuyingRequest = {
   siteUrl: string;
   ether: string;
 };
+const availableIds = Object.values(AVAILABLE_NETWORK_IDS);
 export const useAdsContract = () => {
   const { currentAccount, networkId, signer } = useMetamaskCtx();
   const [adsContract, setAdsContract] = useState<Ads | undefined>(undefined);
+
+  const contractAddress = useMemo(() => {
+    const jsonKey = availableIds.find((id) => networkId === id);
+
+    if (jsonKey) {
+      return networks[jsonKey].address;
+    }
+  }, [networkId]);
+
+  useEffect(() => {
+    const getContract = () => {
+      if (contractAddress && signer) {
+        setAdsContract(Ads__factory.connect(contractAddress, signer));
+      } else {
+        setAdsContract(undefined);
+      }
+    };
+
+    getContract();
+  }, [signer, contractAddress]);
 
   const getAds = async () => {
     return await adsContract?.getAds();
@@ -44,23 +65,6 @@ export const useAdsContract = () => {
       throw err;
     }
   };
-
-  useEffect(() => {
-    const getContract = () => {
-      const availableIds = Object.values(AVAILABLE_NETWORK_IDS);
-      const jsonKey = availableIds.find((id) => networkId === id);
-
-      if (signer && jsonKey) {
-        const address = networks[jsonKey].address;
-        setAdsContract(Ads__factory.connect(address, signer));
-        return;
-      }
-
-      setAdsContract(undefined);
-    };
-
-    getContract();
-  }, [networkId, signer]);
 
   return {
     adsContract,
