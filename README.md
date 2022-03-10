@@ -1,4 +1,4 @@
-# Ad Auction Dapp.etr
+# Ad Auction Dapp.eth
 
 simple ad buying and showing platform with react + solidity
 
